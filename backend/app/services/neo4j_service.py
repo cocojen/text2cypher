@@ -1,6 +1,7 @@
 from typing import Any
 
 from neo4j import Driver
+from neo4j.graph import Node, Path, Relationship
 
 from app.schemas.graph import (
     GraphData,
@@ -195,15 +196,31 @@ def _sanitize_label(label: str) -> str:
     return "".join(c for c in label if c.isalnum() or c == "_")
 
 
+def _to_jsonable(val: Any) -> Any:
+    """Neo4j 값(노드/관계/경로/중첩 컬렉션 포함)을 JSON 직렬화 가능한 형태로 재귀 변환"""
+    if val is None or isinstance(val, (str, int, float, bool)):
+        return val
+    if isinstance(val, Node):
+        node = {"_labels": list(val.labels)}
+        node.update({k: _to_jsonable(v) for k, v in dict(val).items()})
+        return node
+    if isinstance(val, Relationship):
+        rel = {"_type": val.type}
+        rel.update({k: _to_jsonable(v) for k, v in dict(val).items()})
+        return rel
+    if isinstance(val, Path):
+        return {
+            "nodes": [_to_jsonable(n) for n in val.nodes],
+            "relationships": [_to_jsonable(r) for r in val.relationships],
+        }
+    if isinstance(val, dict) or hasattr(val, "items"):
+        return {k: _to_jsonable(v) for k, v in dict(val).items()}
+    if hasattr(val, "__iter__") and not isinstance(val, (str, bytes)):
+        return [_to_jsonable(v) for v in val]
+    # 기타 타입(temporal 등)은 문자열화
+    return str(val)
+
+
 def _serialize_record(record) -> dict[str, Any]:
     """Neo4j 레코드를 JSON 직렬화 가능한 dict로 변환"""
-    data = {}
-    for key in record.keys():
-        val = record[key]
-        if hasattr(val, "items"):
-            data[key] = dict(val)
-        elif hasattr(val, "__iter__") and not isinstance(val, str):
-            data[key] = list(val)
-        else:
-            data[key] = val
-    return data
+    return {key: _to_jsonable(record[key]) for key in record.keys()}
