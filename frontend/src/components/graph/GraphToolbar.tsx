@@ -1,5 +1,5 @@
 import {
-  Plus, GitFork, Route, Database, Trash2,
+  Plus, GitFork, Route, Database, Building2, Trash2,
   Square, Box, Layers,
 } from 'lucide-react';
 
@@ -15,6 +15,7 @@ interface Props {
   relCount?: number;
   onClearAll?: () => void;
   onSeedData?: () => void;
+  onSeedIt?: () => void;
   onSchema?: () => void;
   schemaActive?: boolean;
   viewMode?: '2d' | '3d';
@@ -32,7 +33,7 @@ const LAYOUTS = [
 export default function GraphToolbar({
   onAddNode, onAddEdge, layout, onLayoutChange,
   loading, onPathFinder, pathFinderActive,
-  nodeCount, relCount, onClearAll, onSeedData,
+  nodeCount, relCount, onClearAll, onSeedData, onSeedIt,
   onSchema, schemaActive, viewMode = '3d', onViewModeChange,
 }: Props) {
   return (
@@ -91,6 +92,16 @@ export default function GraphToolbar({
           >
             <Database className="w-3.5 h-3.5" />
             시드 데이터
+          </button>
+        )}
+        {onSeedIt && (
+          <button
+            onClick={onSeedIt}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface border border-border text-text-secondary rounded-lg text-sm font-medium hover:bg-surface-tertiary disabled:opacity-50"
+          >
+            <Building2 className="w-3.5 h-3.5" />
+            IT개발부
           </button>
         )}
         {onClearAll && (

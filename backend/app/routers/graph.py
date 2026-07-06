@@ -91,3 +91,12 @@ def seed_data():
 
     result = seed(get_neo4j_driver())
     return {"ok": True, "nodes": result["nodes"], "relationships": result["relationships"]}
+
+
+@router.post("/seed-it")
+def seed_it_data():
+    """IT개발부 조직도 추가 삽입 (기존 데이터 보존)"""
+    from seed_it import seed_it
+
+    result = seed_it(get_neo4j_driver())
+    return {"ok": True, "teams": result["teams"], "people": result["people"]}

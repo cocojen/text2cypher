@@ -6,7 +6,7 @@ NODE_DESCRIPTIONS: dict[str, str] = {
     "Division": "부문 — 회사 바로 아래 최상위 조직 단위 (예: 기술부문, 경영관리부문)",
     "Department": "본부 — 부문 아래 중간 조직 단위 (예: 개발본부, 기술연구센터)",
     "Team": "팀 — 본부 아래 실무 조직 단위 (예: 서버개발팀, 앱개발팀)",
-    "Person": "사람 — 직원. name(한글), name_en(영문), title(직함), level(직급) 속성 보유",
+    "Person": "사람 — 직원. name(한글), name_en(영문), title(직함), level(직위: 팀장/부부장/팀원 등), grade(직급: 2급/3급/G1/G2 등), job(담당업무) 속성 보유",
 }
 
 # 관계 타입 설명 — LLM이 각 관계의 의미와 방향을 이해하도록

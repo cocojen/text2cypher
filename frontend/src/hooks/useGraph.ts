@@ -60,6 +60,11 @@ export function useGraph() {
     await refresh();
   }, [refresh]);
 
+  const seedIt = useCallback(async () => {
+    await graphApi.seedIt();
+    await refresh();
+  }, [refresh]);
+
   return {
     graphData,
     loading,
@@ -72,5 +77,6 @@ export function useGraph() {
     removeRelationship,
     clearAll,
     seedData,
+    seedIt,
   };
 }

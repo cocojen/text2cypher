@@ -34,9 +34,14 @@ ollama pull <model-name>
 # 전체 스택 실행
 docker compose up -d
 
-# 시드 데이터 삽입
+# 시드 데이터 삽입 (데모테크 조직도)
 docker compose exec backend uv run seed.py
+
+# IT개발부 조직도 추가 (기존 데이터 유지)
+docker compose exec backend uv run seed_it.py
 ```
+
+`seed.py`는 DB를 초기화한 뒤 데모 조직도를 넣고, `seed_it.py`는 기존 데이터를 건드리지 않고 IT개발부(6개 팀·49명)만 추가·갱신합니다. 둘 다 그래프 툴바의 **시드 데이터** / **IT개발부** 버튼으로도 실행할 수 있습니다.
 
 실행 후 http://localhost:3000 으로 접속합니다.
 

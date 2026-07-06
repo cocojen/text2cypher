@@ -131,6 +131,11 @@ function App() {
     await graph.seedData();
   };
 
+  const handleSeedIt = async () => {
+    if (!window.confirm('IT개발부 조직도를 추가합니다. 기존 데이터는 유지됩니다. 계속하시겠습니까?')) return;
+    await graph.seedIt();
+  };
+
   const tabList: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: 'graph', label: '그래프', icon: <Network className="w-4 h-4" /> },
     { key: 'chat', label: '챗봇', icon: <MessageCircle className="w-4 h-4" /> },
@@ -184,6 +189,7 @@ function App() {
               relCount={graph.graphData.relationships.length}
               onClearAll={handleClearAll}
               onSeedData={handleSeedData}
+              onSeedIt={handleSeedIt}
               onSchema={() => setSchemaOpen(prev => !prev)}
               schemaActive={schemaOpen}
               viewMode={viewMode}
