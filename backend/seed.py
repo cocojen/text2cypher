@@ -356,3 +356,30 @@ def seed(driver: Driver) -> dict[str, int]:
         rel_count = rel_result.single()["rels"]
 
         return {"nodes": node_count, "relationships": rel_count}
+
+
+def main() -> None:
+    """CLI 진입점 — 기존 데이터를 모두 지우고 시드 데이터를 삽입한다.
+
+    실행: `uv run seed` (backend 디렉터리에서)
+    """
+    from neo4j import GraphDatabase
+
+    from app.config import settings
+
+    driver = GraphDatabase.driver(
+        settings.neo4j_uri,
+        auth=(settings.neo4j_user, settings.neo4j_password),
+    )
+    try:
+        driver.verify_connectivity()
+        print(f"Neo4j 연결됨: {settings.neo4j_uri}")
+        print("기존 데이터를 삭제하고 시드 데이터를 삽입합니다...")
+        result = seed(driver)
+        print(f"완료 — 노드 {result['nodes']}개, 관계 {result['relationships']}개")
+    finally:
+        driver.close()
+
+
+if __name__ == "__main__":
+    main()
