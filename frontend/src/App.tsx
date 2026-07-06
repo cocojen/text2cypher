@@ -136,6 +136,11 @@ function App() {
     await graph.seedIt();
   };
 
+  const handleSeedStocks = async () => {
+    if (!window.confirm('주식·금융 그래프를 추가합니다. 기존 데이터는 유지됩니다. 계속하시겠습니까?')) return;
+    await graph.seedStocks();
+  };
+
   const tabList: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: 'graph', label: '그래프', icon: <Network className="w-4 h-4" /> },
     { key: 'chat', label: '챗봇', icon: <MessageCircle className="w-4 h-4" /> },
@@ -190,6 +195,7 @@ function App() {
               onClearAll={handleClearAll}
               onSeedData={handleSeedData}
               onSeedIt={handleSeedIt}
+              onSeedStocks={handleSeedStocks}
               onSchema={() => setSchemaOpen(prev => !prev)}
               schemaActive={schemaOpen}
               viewMode={viewMode}

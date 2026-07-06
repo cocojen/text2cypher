@@ -100,3 +100,12 @@ def seed_it_data():
 
     result = seed_it(get_neo4j_driver())
     return {"ok": True, "teams": result["teams"], "people": result["people"]}
+
+
+@router.post("/seed-stocks")
+def seed_stocks_data():
+    """주식/금융 그래프 추가 삽입 (기존 데이터 보존)"""
+    from seed_stocks import seed_stocks
+
+    result = seed_stocks(get_neo4j_driver())
+    return {"ok": True, "nodes": result["nodes"], "relationships": result["relationships"]}

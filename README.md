@@ -39,9 +39,16 @@ docker compose exec backend uv run seed.py
 
 # IT개발부 조직도 추가 (기존 데이터 유지)
 docker compose exec backend uv run seed_it.py
+
+# 주식·금융 그래프 추가 (기존 데이터 유지)
+docker compose exec backend uv run seed_stocks.py
 ```
 
-`seed.py`는 DB를 초기화한 뒤 데모 조직도를 넣고, `seed_it.py`는 기존 데이터를 건드리지 않고 IT개발부(6개 팀·49명)만 추가·갱신합니다. 둘 다 그래프 툴바의 **시드 데이터** / **IT개발부** 버튼으로도 실행할 수 있습니다.
+- `seed.py` — DB를 초기화한 뒤 데모테크 조직도를 넣습니다.
+- `seed_it.py` — 기존 데이터를 건드리지 않고 IT개발부(6개 팀·49명)만 추가·갱신합니다.
+- `seed_stocks.py` — 원자재→기업→자회사→투자사로 이어지는 주식·금융 그래프(실제 기업 기반 소규모, 41노드)를 추가합니다. 지분·영향 수치는 데모용 예시값입니다.
+
+셋 다 그래프 툴바의 **시드 데이터 ▾** 드롭다운(데모테크 / IT개발부 / 주식·금융)으로도 실행할 수 있습니다.
 
 실행 후 http://localhost:3000 으로 접속합니다.
 

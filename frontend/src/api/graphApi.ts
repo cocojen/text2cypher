@@ -36,4 +36,7 @@ export const graphApi = {
 
   seedIt: () =>
     client.post<{ ok: boolean; teams: number; people: number }>('/graph/seed-it').then(r => r.data),
+
+  seedStocks: () =>
+    client.post<{ ok: boolean; nodes: number; relationships: number }>('/graph/seed-stocks').then(r => r.data),
 };

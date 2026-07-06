@@ -7,6 +7,12 @@ NODE_DESCRIPTIONS: dict[str, str] = {
     "Department": "본부 — 부문 아래 중간 조직 단위 (예: 개발본부, 기술연구센터)",
     "Team": "팀 — 본부 아래 실무 조직 단위 (예: 서버개발팀, 앱개발팀)",
     "Person": "사람 — 직원. name(한글), name_en(영문), title(직함), level(직위: 팀장/부부장/팀원 등), grade(직급: 2급/3급/G1/G2 등), job(담당업무) 속성 보유",
+    # ── 주식/금융 도메인 ──
+    "Commodity": "원자재 — 금, 구리, 니켈, 리튬, 원유 등. 가격 변동이 기업에 영향(AFFECTS)",
+    "Corp": "기업 — 상장사 및 자회사 (예: 삼성전자, 고려아연, 켐코). 조직도의 Company와 별개",
+    "Fund": "투자사/펀드 — 기업에 투자(INVESTS_IN) (예: 국민연금, BlackRock)",
+    "Sector": "업종 — 반도체, 2차전지, 금·비철금속 등 (기업이 IN_SECTOR로 연결)",
+    "Country": "국가 — 기업/펀드의 상장·본사국 (LISTED_IN)",
 }
 
 # 관계 타입 설명 — LLM이 각 관계의 의미와 방향을 이해하도록
@@ -14,6 +20,13 @@ RELATIONSHIP_DESCRIPTIONS: dict[str, str] = {
     "PART_OF": "(하위조직)-[:PART_OF]->(상위조직). 조직 계층 구조. Team→Department→Division→Company 순서",
     "BELONGS_TO": "(Person)-[:BELONGS_TO {role}]->(조직). 사람의 조직 소속. role 프로퍼티로 역할 구분 (대표이사, 부문장, 본부장, 팀장, 팀원 등). 겸직자는 BELONGS_TO 관계가 여러 개",
     "REPORTS_TO": "(Person)-[:REPORTS_TO]->(Person). 보고 관계. 팀원→팀장→본부장→부문장→대표이사 순서",
+    # ── 주식/금융 도메인 ──
+    "AFFECTS": "(Commodity)-[:AFFECTS {impact}]->(Corp). 원자재 가격이 기업에 미치는 영향. impact '+'=수혜, '-'=악재",
+    "OWNS": "(Corp)-[:OWNS {stake}]->(Corp). 모회사→자회사 지분 소유. stake=지분%. 가변 길이로 소유 사슬 추적 가능",
+    "INVESTS_IN": "(Fund)-[:INVESTS_IN]->(Corp). 펀드/투자사가 기업에 투자",
+    "SUPPLIES": "(Corp)-[:SUPPLIES {item}]->(Corp). 공급사→고객사 공급 관계. item=품목",
+    "IN_SECTOR": "(Corp)-[:IN_SECTOR]->(Sector). 기업의 업종",
+    "LISTED_IN": "(Corp|Fund)-[:LISTED_IN]->(Country). 기업/펀드의 상장·본사국",
 }
 
 

@@ -65,6 +65,11 @@ export function useGraph() {
     await refresh();
   }, [refresh]);
 
+  const seedStocks = useCallback(async () => {
+    await graphApi.seedStocks();
+    await refresh();
+  }, [refresh]);
+
   return {
     graphData,
     loading,
@@ -78,5 +83,6 @@ export function useGraph() {
     clearAll,
     seedData,
     seedIt,
+    seedStocks,
   };
 }

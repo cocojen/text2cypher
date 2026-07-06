@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import {
-  Plus, GitFork, Route, Database, Building2, Trash2,
+  Plus, GitFork, Route, Database, Building2, LineChart, ChevronDown, Trash2,
   Square, Box, Layers,
 } from 'lucide-react';
 
@@ -16,6 +17,7 @@ interface Props {
   onClearAll?: () => void;
   onSeedData?: () => void;
   onSeedIt?: () => void;
+  onSeedStocks?: () => void;
   onSchema?: () => void;
   schemaActive?: boolean;
   viewMode?: '2d' | '3d';
@@ -33,9 +35,15 @@ const LAYOUTS = [
 export default function GraphToolbar({
   onAddNode, onAddEdge, layout, onLayoutChange,
   loading, onPathFinder, pathFinderActive,
-  nodeCount, relCount, onClearAll, onSeedData, onSeedIt,
+  nodeCount, relCount, onClearAll, onSeedData, onSeedIt, onSeedStocks,
   onSchema, schemaActive, viewMode = '3d', onViewModeChange,
 }: Props) {
+  const [seedOpen, setSeedOpen] = useState(false);
+  const hasSeed = onSeedData || onSeedIt || onSeedStocks;
+
+  const seedItemClass =
+    'w-full flex items-center gap-2 px-3 py-2 text-sm text-left text-text-secondary hover:bg-surface-tertiary';
+
   return (
     <div className="bg-surface border-b border-border">
       {/* 1줄: 액션 버튼들 */}
@@ -84,25 +92,52 @@ export default function GraphToolbar({
         {/* 스페이서 */}
         <div className="flex-1" />
 
-        {onSeedData && (
-          <button
-            onClick={onSeedData}
-            disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface border border-border text-text-secondary rounded-lg text-sm font-medium hover:bg-surface-tertiary disabled:opacity-50"
-          >
-            <Database className="w-3.5 h-3.5" />
-            시드 데이터
-          </button>
-        )}
-        {onSeedIt && (
-          <button
-            onClick={onSeedIt}
-            disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface border border-border text-text-secondary rounded-lg text-sm font-medium hover:bg-surface-tertiary disabled:opacity-50"
-          >
-            <Building2 className="w-3.5 h-3.5" />
-            IT개발부
-          </button>
+        {hasSeed && (
+          <div className="relative">
+            <button
+              onClick={() => setSeedOpen(o => !o)}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface border border-border text-text-secondary rounded-lg text-sm font-medium hover:bg-surface-tertiary disabled:opacity-50"
+            >
+              <Database className="w-3.5 h-3.5" />
+              시드 데이터
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${seedOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {seedOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setSeedOpen(false)} />
+                <div className="absolute right-0 mt-1 w-52 bg-surface border border-border rounded-lg shadow-lg z-20 py-1 overflow-hidden">
+                  {onSeedData && (
+                    <button
+                      onClick={() => { setSeedOpen(false); onSeedData(); }}
+                      className={seedItemClass}
+                    >
+                      <Database className="w-3.5 h-3.5 text-text-tertiary" />
+                      <span>데모테크 <span className="text-text-tertiary">· 전체 초기화</span></span>
+                    </button>
+                  )}
+                  {onSeedIt && (
+                    <button
+                      onClick={() => { setSeedOpen(false); onSeedIt(); }}
+                      className={seedItemClass}
+                    >
+                      <Building2 className="w-3.5 h-3.5 text-text-tertiary" />
+                      <span>IT개발부 <span className="text-text-tertiary">· 추가</span></span>
+                    </button>
+                  )}
+                  {onSeedStocks && (
+                    <button
+                      onClick={() => { setSeedOpen(false); onSeedStocks(); }}
+                      className={seedItemClass}
+                    >
+                      <LineChart className="w-3.5 h-3.5 text-text-tertiary" />
+                      <span>주식·금융 <span className="text-text-tertiary">· 추가</span></span>
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         )}
         {onClearAll && (
           <button
